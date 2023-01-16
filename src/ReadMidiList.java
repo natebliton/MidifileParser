@@ -20,14 +20,9 @@ public class ReadMidiList {
     public static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
     public static final int QUARTER_TICS = 960;
 
-    public static List<Note> ParseMidiFile() throws InvalidMidiDataException, IOException {
+    public static List<Note> ParseMidiFile(String midifileName) throws InvalidMidiDataException, IOException {
         List<Note> noteList = new ArrayList<>();
-        Sequence sequence = MidiSystem.getSequence(new File("background3.mid"));
-        long tickLength = sequence.getTickLength();
-        int resolution = sequence.getResolution();
-        float divisiontype = sequence.getDivisionType();
-        long microsecondLength = sequence.getMicrosecondLength();
-
+        Sequence sequence = MidiSystem.getSequence(new File(midifileName));
 
         int trackNumber = 0;
         for (Track track :  sequence.getTracks()) {
@@ -76,9 +71,9 @@ public class ReadMidiList {
         }
         return noteList;
     }
-    public static void WriteTextFile(List<Note> noteList) {
+    public static void WriteTextFile(List<Note> noteList, String outputFilename) {
         try {
-            FileWriter myWriter = new FileWriter("output.txt");
+            FileWriter myWriter = new FileWriter(outputFilename);
             myWriter.write("type channel pitchMIDI velocityMIDI startTic durationTic");
             for (Note thisNote: noteList
             ) {
@@ -96,8 +91,8 @@ public class ReadMidiList {
 
     }
     public static void main(String[] args) throws Exception {
-        List<Note> noteList = ParseMidiFile();
-        WriteTextFile(noteList);
+        List<Note> noteList = ParseMidiFile("background3.mid");
+        WriteTextFile(noteList, "output2.txt");
 
     }
 }
